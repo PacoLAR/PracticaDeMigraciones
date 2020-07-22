@@ -14,9 +14,10 @@ namespace Dragons
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        private IConfiguration Configuration{get;set;}
+        public Startup(IConfiguration config)
         {
-            Configuration = configuration;
+            Configuration = config;
         }
         public void ConfigureServices(IServiceCollection services){
 
@@ -25,11 +26,13 @@ namespace Dragons
             opts.UseSqlServer(
                 Configuration["ConnectionStrings:DragonsConnection"]);
         });
+
+        services.AddScoped<IDragonRepository,EFDragonRepository>();
         
         }
         
 
-        public IConfiguration Configuration { get; }
+      
 
         /* This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -60,6 +63,7 @@ namespace Dragons
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+            SeedData.EnsurePopulated(app);
         }
     }
 }
